@@ -17,9 +17,5 @@
     <ProjectReference Include="..\Shared\GameLobbySignalRTemplate.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
-
 
 </Project>
