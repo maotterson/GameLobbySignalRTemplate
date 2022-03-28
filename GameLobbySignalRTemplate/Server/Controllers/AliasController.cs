@@ -17,9 +17,9 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            return _aliasService;
+            return _aliasService.GetAlias();
         }
     }
 }
