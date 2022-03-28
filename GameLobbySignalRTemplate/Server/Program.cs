@@ -1,13 +1,17 @@
+using GameLobbySignalRTemplate.Server.Models.Database;
 using GameLobbySignalRTemplate.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Database Services
+builder.Services.Configure<GameDatabaseSettings>(
+    builder.Configuration.GetSection("GameDatabase"));
+builder.Services.AddSingleton<MongoDBService>();
 
+// Other Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
 builder.Services.AddSingleton<AliasService>();
 
 var app = builder.Build();
