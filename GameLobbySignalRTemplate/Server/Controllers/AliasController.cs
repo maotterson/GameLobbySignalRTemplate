@@ -1,5 +1,6 @@
 ﻿using GameLobbySignalRTemplate.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace GameLobbySignalRTemplate.Server.Controllers
 {
@@ -7,10 +8,10 @@ namespace GameLobbySignalRTemplate.Server.Controllers
     [Route("api/[controller]")]
     public class AliasController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<AliasController> _logger;
         private readonly AliasService _aliasService;
 
-        public AliasController(ILogger<WeatherForecastController> logger, AliasService aliasService)
+        public AliasController(ILogger<AliasController> logger, AliasService aliasService)
         {
             _logger = logger;
             _aliasService = aliasService;
@@ -19,7 +20,8 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            return await _aliasService.GetRandomAliasAsync();
+            var alias = await _aliasService.GetRandomAliasAsync();
+            return JsonSerializer.Serialize(alias);
         }
     }
 }

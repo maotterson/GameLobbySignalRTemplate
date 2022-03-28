@@ -1,7 +1,30 @@
 ﻿@page "/"
+@using System.Text.Json
+@inject HttpClient HttpClient
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+@if(Alias is not null)
+{
+    <span>@Alias</span>
+}
+<button @onclick="FetchAlias">New Name</button>
 
-Welcome to your new app.
+@code{
+    public string? Alias {get; private set;}
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchAlias();
+    }
+    private async Task FetchAlias()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,"/api/alias");
+        var response = await HttpClient.SendAsync(request);
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            Alias = await JsonSerializer.DeserializeAsync<string>(responseStream);
+            StateHasChanged();
+        }
+    }
+}

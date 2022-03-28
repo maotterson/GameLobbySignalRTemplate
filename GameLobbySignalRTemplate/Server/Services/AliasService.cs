@@ -23,7 +23,7 @@ namespace GameLobbySignalRTemplate.Server.Services
         }
         private async Task<IEnumerable<Prefix>> GetPrefixesAsync()
         {
-            var prefixCollection = _mongoDB.GetCollection<Prefix>(_suffixCollectionName);
+            var prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
             return await prefixCollection.Find(_ => true).ToListAsync();
         }
 
@@ -37,11 +37,11 @@ namespace GameLobbySignalRTemplate.Server.Services
         {
             if(prefixes is null)
             {
-                prefixes = await GetPrefixes();
+                prefixes = await GetPrefixesAsync();
             }
             if(suffixes is null)
             {
-                suffixes = await GetSuffixes();
+                suffixes = await GetSuffixesAsync();
             }
 
             Random random = new Random();
