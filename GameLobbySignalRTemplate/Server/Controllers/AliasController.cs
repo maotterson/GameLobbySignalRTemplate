@@ -21,6 +21,7 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         public async Task<string> GetAsync()
         {
             var alias = await _aliasService.GetRandomAliasAsync();
+            _logger.LogInformation(alias);
             return JsonSerializer.Serialize(alias);
         }
     }
