@@ -6,6 +6,7 @@
 
         public string DatabaseName { get; set; } = null!;
 
-        public string AliasCollectionName { get; set; } = null!;
+        public string PrefixCollectionName { get; set; } = null!;
+        public string SuffixCollectionName { get; set; } = null!;
     }
 }
