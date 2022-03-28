@@ -33,7 +33,7 @@ namespace GameLobbySignalRTemplate.Server.Services
             return await suffixCollection.Find(_ => true).ToListAsync();
         }
 
-        public async Task<string> GetAlias()
+        public async Task<string> GetRandomAlias()
         {
             if(prefixes is null)
             {
