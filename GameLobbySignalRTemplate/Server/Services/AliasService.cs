@@ -21,19 +21,19 @@ namespace GameLobbySignalRTemplate.Server.Services
             _prefixCollectionName = gameDBSettings.Value.PrefixCollectionName;
             _suffixCollectionName = gameDBSettings.Value.SuffixCollectionName;
         }
-        private async Task<IEnumerable<Prefix>> GetPrefixes()
+        private async Task<IEnumerable<Prefix>> GetPrefixesAsync()
         {
             var prefixCollection = _mongoDB.GetCollection<Prefix>(_suffixCollectionName);
             return await prefixCollection.Find(_ => true).ToListAsync();
         }
 
-        private async Task<IEnumerable<Suffix>> GetSuffixes()
+        private async Task<IEnumerable<Suffix>> GetSuffixesAsync()
         {
             var suffixCollection = _mongoDB.GetCollection<Suffix>(_suffixCollectionName);
             return await suffixCollection.Find(_ => true).ToListAsync();
         }
 
-        public async Task<string> GetRandomAlias()
+        public async Task<string> GetRandomAliasAsync()
         {
             if(prefixes is null)
             {

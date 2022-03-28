@@ -17,9 +17,9 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         }
 
         [HttpGet]
-        public string Get()
+        public async Task<string> GetAsync()
         {
-            return _aliasService.GetAlias();
+            return await _aliasService.GetRandomAliasAsync();
         }
     }
 }
