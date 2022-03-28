@@ -8,11 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.1" />
+    <PackageReference Include="MongoDB.Bson" Version="2.15.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\GameLobbySignalRTemplate.Client.csproj" />
     <ProjectReference Include="..\Shared\GameLobbySignalRTemplate.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\" />
   </ItemGroup>
 
 

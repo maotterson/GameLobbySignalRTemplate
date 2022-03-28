@@ -2,7 +2,9 @@
 {
     public class AliasService
     {
-        private readonly IEnumerable<string> prefixes = new String[]{ "Swashbuckler"};
-        private readonly IEnumerable<string> suffixes = new String[] { "Steve" };
+        private readonly IEnumerable<string> prefixes;
+        private readonly IEnumerable<string> suffixes;
+
+        G
     }
 }
