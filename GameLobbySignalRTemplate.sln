@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLobbySignalRTemplate.Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLobbySignalRTemplate.Shared", "GameLobbySignalRTemplate\Shared\GameLobbySignalRTemplate.Shared.csproj", "{662C4B8F-AE1D-4429-A10D-3C6F63054D7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLobbySignalRTemplate.SignalR", "GameLobbySignalRTemplate\SignalR\GameLobbySignalRTemplate.SignalR.csproj", "{CDD55838-5836-413C-81DF-867D84DBC45F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLobbySignalRTemplate.SignalR", "GameLobbySignalRTemplate\SignalR\GameLobbySignalRTemplate.SignalR.csproj", "{CDD55838-5836-413C-81DF-867D84DBC45F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E17327F1-CF64-4C1B-8BD7-FD3C30FD53EF}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
