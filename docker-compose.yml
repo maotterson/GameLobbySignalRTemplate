@@ -42,5 +42,16 @@ services:
         ports:
             - 27017:27017
 
+    cache:
+        image: redis:6.2-alpine
+        restart: always
+        ports:
+          - '6379:6379'
+        command: redis-server --save 20 1 --loglevel warning --requirepass password #replace with a secure password in production
+        volumes: 
+          - cache:/data
+
 volumes:
     mongodb_data_container:
+    cache:
+        driver: local
