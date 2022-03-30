@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+    gamelobbysignalrtemplate.server:
+        image: ${DOCKER_REGISTRY-}gamelobbysignalrtemplateserver
+        build:
+            context: .
+            dockerfile: GameLobbySignalRTemplate/Server/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=https://+:443;http://+80
+            - ASPNETCORE_HTTPS_PORT=44311
+            - ASPNETCORE_Kestrel__Certificates__Default__Password=localhost  #replace with a secure password in production
+            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/dev_cert.pfx
+        volumes:
+          - ./conf.d/https/:/https/
+        depends_on:
+            - mongo
+        links:
+            - mongo
+        restart: always
+        ports:
+          - "50420:80"
+          - "44361:443"
+
+    gamelobbysignalrtemplate.signalr:
+        image: ${DOCKER_REGISTRY-}gamelobbysignalrtemplatesignalr
+        build:
+            context: .
+            dockerfile: GameLobbySignalRTemplate/SignalR/Dockerfile
+        ports:
+            - "64606:64606"
+
+    mongo:
+        image: mongo
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root #replace with a secure password in production
+        volumes:
+            - mongodb_data_container:/data/db
+        ports:
+            - 27017:27017
+
+volumes:
+    mongodb_data_container:
