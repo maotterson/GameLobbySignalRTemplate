@@ -22,4 +22,4 @@ RUN dotnet publish "GameLobbySignalRTemplate.Server.csproj" -c Release -o /app/p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "GameLobbySignalRTemplate.Server.dll"]
+ENTRYPOINT ["dotnet", "GameLobbySignalRTemplate.Server.dll","--urls","https://0.0.0.0:64605"]
