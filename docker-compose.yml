@@ -16,8 +16,10 @@ services:
           - ./conf.d/https/:/https/
         depends_on:
             - mongo
+            - cache
         links:
             - mongo
+            - cache
         restart: always
         ports:
           - "50420:80"
