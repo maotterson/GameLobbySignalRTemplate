@@ -30,17 +30,27 @@ namespace GameLobbySignalRTemplate.Server.Services
         {
             //check cache 
             var cache = _redis.GetDatabase();
-            string json = cache.StringGet(_prefixCollectionName);
-            IEnumerable<Prefix> prefixes;
-            if(json is null)
+            long numPrefixes = await cache.ListLengthAsync(_prefixCollectionName);
+
+            IList<Prefix> prefixes;
+            if(numPrefixes is 0)
             {
                 var prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
                 prefixes = await prefixCollection.Find(_ => true).ToListAsync();
-                cache.ListLeftPush(_prefixCollectionName, prefixes.SerializeJson());
+                foreach(var prefix in prefixes)
+                {
+                    cache.ListLeftPush(_prefixCollectionName, prefix.SerializeJson());
+                }
             }
             else
             {
-                prefixes = json.DeserializeJson<List<Prefix>>();
+                prefixes = new List<Prefix>();
+                var redisArray = await cache.ListRangeAsync(_prefixCollectionName);
+                var json = redisArray.ToStringArray();
+                foreach(var item in json)
+                {
+                    prefixes.Add(item.DeserializeJson<Prefix>());
+                }
             }
             return prefixes;
         }
