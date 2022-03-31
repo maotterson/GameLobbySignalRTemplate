@@ -2,6 +2,8 @@
 using GameLobbySignalRTemplate.Server.Models.Database;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using StackExchange.Redis;
+using StackExchange.Redis.Extensions;
 
 namespace GameLobbySignalRTemplate.Server.Services
 {
@@ -10,20 +12,29 @@ namespace GameLobbySignalRTemplate.Server.Services
         private IEnumerable<Prefix> prefixes;
         private IEnumerable<Suffix> suffixes;
         private IMongoDatabase _mongoDB;
+        private ConnectionMultiplexer _redis;
         private string _prefixCollectionName;
         private string _suffixCollectionName;
 
         public AliasService(
             MongoDBService mongoDBService,
+            RedisCacheService redisCacheService
             IOptions<GameDatabaseSettings> gameDBSettings)
         {
+            _redis = redisCacheService.Redis;
             _mongoDB = mongoDBService.MongoDatabase;
             _prefixCollectionName = gameDBSettings.Value.PrefixCollectionName;
             _suffixCollectionName = gameDBSettings.Value.SuffixCollectionName;
         }
         private async Task<IEnumerable<Prefix>> GetPrefixesAsync()
         {
-            var prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
+            var cache = _redis.GetDatabase();
+            var prefixCollection = new List<Prefix>();
+            if(prefixCollection)
+            {
+                prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
+                cache.ListLeftPush("Prefixes",prefixCollection);
+            }
             return await prefixCollection.Find(_ => true).ToListAsync();
         }
 
