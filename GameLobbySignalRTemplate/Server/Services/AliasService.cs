@@ -3,7 +3,7 @@ using GameLobbySignalRTemplate.Server.Models.Database;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using StackExchange.Redis;
-using StackExchange.Redis.Extensions;
+using GameLobbySignalRTemplate.Server.Utils;
 
 namespace GameLobbySignalRTemplate.Server.Services
 {
@@ -18,7 +18,7 @@ namespace GameLobbySignalRTemplate.Server.Services
 
         public AliasService(
             MongoDBService mongoDBService,
-            RedisCacheService redisCacheService
+            RedisCacheService redisCacheService,
             IOptions<GameDatabaseSettings> gameDBSettings)
         {
             _redis = redisCacheService.Redis;
@@ -28,14 +28,21 @@ namespace GameLobbySignalRTemplate.Server.Services
         }
         private async Task<IEnumerable<Prefix>> GetPrefixesAsync()
         {
+            //check cache 
             var cache = _redis.GetDatabase();
-            var prefixCollection = new List<Prefix>();
-            if(prefixCollection)
+            string json = cache.StringGet(_prefixCollectionName);
+            IEnumerable<Prefix> prefixes;
+            if(json is null)
             {
-                prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
-                cache.ListLeftPush("Prefixes",prefixCollection);
+                var prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
+                prefixes = await prefixCollection.Find(_ => true).ToListAsync();
+                cache.ListLeftPush(_prefixCollectionName, prefixes.SerializeJson());
             }
-            return await prefixCollection.Find(_ => true).ToListAsync();
+            else
+            {
+                prefixes = json.DeserializeJson<List<Prefix>>();
+            }
+            return prefixes;
         }
 
         private async Task<IEnumerable<Suffix>> GetSuffixesAsync()
