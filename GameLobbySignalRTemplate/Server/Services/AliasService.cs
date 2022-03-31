@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using StackExchange.Redis;
 using GameLobbySignalRTemplate.Server.Utils;
+using GameLobbySignalRTemplate.Server.Models.Redis;
 
 namespace GameLobbySignalRTemplate.Server.Services
 {
@@ -28,33 +29,42 @@ namespace GameLobbySignalRTemplate.Server.Services
         }
         private async Task<IEnumerable<Prefix>> GetPrefixesAsync()
         {
-            //check cache 
             var cache = _redis.GetDatabase();
-            long numPrefixes = await cache.ListLengthAsync(_prefixCollectionName);
-
-            IList<Prefix> prefixes;
-            if(numPrefixes is 0)
+            CacheListProperty<Prefix> cachedPrefixes = new()
             {
-                var prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
-                prefixes = await prefixCollection.Find(_ => true).ToListAsync();
-                foreach(var prefix in prefixes)
-                {
-                    cache.ListLeftPush(_prefixCollectionName, prefix.SerializeJson());
-                }
-            }
-            else
+                Key = _prefixCollectionName
+            };
+            bool isCached = await cachedPrefixes.TryCacheAsync(cache);
+            if (isCached) return cachedPrefixes.Value;
+            
+            var prefixCollection = _mongoDB.GetCollection<Prefix>(_prefixCollectionName);
+            var prefixes = await prefixCollection.Find(_ => true).ToListAsync();
+            foreach(var prefix in prefixes)
             {
-                prefixes = new List<Prefix>();
-                var redisArray = await cache.ListRangeAsync(_prefixCollectionName);
-                var json = redisArray.ToStringArray();
-                foreach(var item in json)
-                {
-                    prefixes.Add(item.DeserializeJson<Prefix>());
-                }
+                cache.ListLeftPush(_prefixCollectionName, prefix.SerializeJson());
             }
             return prefixes;
         }
-
+        /*
+        private async Task<IEnumerable<T>> GetAndCacheAsync()
+        {
+            var cache = _redis.GetDatabase();
+            ICacheProperty<T> cachedProperty = new()
+            {
+                Key = dbCollectionName
+            }
+            bool isCached = await cachedProperty.TryCacheAsync(cache);
+            if(isCached) return cachedProperty.Value;
+            
+            var collection = _mongoDB.GetCollection<T>(dbCollectionName);
+            var uncachedProperty = await collection.Find(_ => true).ToListAsync();
+            foreach(var item in uncachedProperty)
+            {
+                cache.ListLeftPush(dbCollectionName, item.SerializeJson());
+            }
+            return uncachedProperty;
+        }
+        */
         private async Task<IEnumerable<Suffix>> GetSuffixesAsync()
         {
             var suffixCollection = _mongoDB.GetCollection<Suffix>(_suffixCollectionName);
