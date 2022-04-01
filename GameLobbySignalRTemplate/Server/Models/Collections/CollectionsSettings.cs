@@ -4,6 +4,6 @@ namespace GameLobbySignalRTemplate.Server.Models.Collections
 {
     public class CollectionsSettings
     {
-        public Dictionary<string, PropertySetting> Collections { get; set; } = null!;
+        public Dictionary<string, string> CollectionPairs { get; set; } = null!;
     }
 }

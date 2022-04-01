@@ -22,7 +22,7 @@ namespace GameLobbySignalRTemplate.Server.Services
 
         public async Task<IList<Suffix>>? GetSuffixesAsync()
         {
-            var collection = _collectionService.CollectionsDictionary["Suffix"].CollectionName;
+            var collection = _collectionService.CollectionsDictionary["Suffix"];
             var cache = Redis.GetDatabase();
             var list = new List<Suffix>();
             if (await cache.ListLengthAsync(collection) == 0) return null!;
@@ -38,7 +38,7 @@ namespace GameLobbySignalRTemplate.Server.Services
 
         public async Task<IList<Prefix>>? GetPrefixesAsync()
         {
-            var collection = _collectionService.CollectionsDictionary["Prefix"].CollectionName;
+            var collection = _collectionService.CollectionsDictionary["Prefix"];
             var cache = Redis.GetDatabase();
             var list = new List<Prefix>();
             if (await cache.ListLengthAsync(collection) == 0) return null!;
@@ -55,7 +55,7 @@ namespace GameLobbySignalRTemplate.Server.Services
         public async Task CacheListAsync<T>(IList<T> list)
         {
             var property = typeof(T).Name;
-            var collection = _collectionService.CollectionsDictionary[property].CollectionName;
+            var collection = _collectionService.CollectionsDictionary[property];
             foreach (var item in list)
             {
                 Redis.GetDatabase().ListLeftPush(collection, item.SerializeJson());

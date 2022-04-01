@@ -12,8 +12,10 @@ builder.Services.Configure<GameDatabaseSettings>(
     builder.Configuration.GetSection("GameDatabase"));
 builder.Services.Configure<RedisCacheSettings>(
     builder.Configuration.GetSection("RedisCache"));
-builder.Services.Configure<CollectionsSettings>(
-    builder.Configuration.GetSection("Collections"));
+builder.Services.Configure<CollectionsSettings>((settings) =>
+{
+    builder.Configuration.GetSection("Collections").Bind(settings);
+});
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<RedisCacheService>();
 builder.Services.AddSingleton<CollectionService>();

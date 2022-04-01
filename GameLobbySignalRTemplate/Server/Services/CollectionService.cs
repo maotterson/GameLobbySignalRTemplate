@@ -6,10 +6,10 @@ namespace GameLobbySignalRTemplate.Server.Services
 {
     public class CollectionService
     {
-        public Dictionary<string, PropertySetting> CollectionsDictionary { get; private set; }
+        public Dictionary<string, string> CollectionsDictionary { get; private set; }
         public CollectionService(IOptions<CollectionsSettings> collectionsSettings)
         {
-            CollectionsDictionary = collectionsSettings.Value.Collections;
+            CollectionsDictionary = collectionsSettings.Value.CollectionPairs;
         }
     }
 }
