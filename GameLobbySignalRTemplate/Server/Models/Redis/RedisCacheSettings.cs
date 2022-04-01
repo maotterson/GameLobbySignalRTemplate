@@ -2,7 +2,6 @@
 {
     public class RedisCacheSettings
     {
-
         public string Configuration { get; set; } = null!;
     }
 }

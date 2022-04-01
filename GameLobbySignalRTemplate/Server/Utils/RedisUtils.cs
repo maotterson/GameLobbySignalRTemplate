@@ -1,6 +1,7 @@
 ﻿using StackExchange.Redis;
 using System.Reflection;
 using Newtonsoft.Json;
+using GameLobbySignalRTemplate.Server.Models.Redis;
 
 namespace GameLobbySignalRTemplate.Server.Utils
 {

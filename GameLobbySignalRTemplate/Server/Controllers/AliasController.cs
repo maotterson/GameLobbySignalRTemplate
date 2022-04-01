@@ -11,7 +11,9 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         private readonly ILogger<AliasController> _logger;
         private readonly AliasService _aliasService;
 
-        public AliasController(ILogger<AliasController> logger, AliasService aliasService)
+        public AliasController(
+            ILogger<AliasController> logger, 
+            AliasService aliasService)
         {
             _logger = logger;
             _aliasService = aliasService;

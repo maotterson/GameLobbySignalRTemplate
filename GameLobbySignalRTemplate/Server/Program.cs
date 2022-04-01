@@ -1,7 +1,9 @@
+using GameLobbySignalRTemplate.Server.Models.Collections;
 using GameLobbySignalRTemplate.Server.Models.Database;
 using GameLobbySignalRTemplate.Server.Models.Redis;
 using GameLobbySignalRTemplate.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +12,11 @@ builder.Services.Configure<GameDatabaseSettings>(
     builder.Configuration.GetSection("GameDatabase"));
 builder.Services.Configure<RedisCacheSettings>(
     builder.Configuration.GetSection("RedisCache"));
+builder.Services.Configure<CollectionsSettings>(
+    builder.Configuration.GetSection("Collections"));
 builder.Services.AddSingleton<MongoDBService>();
 builder.Services.AddSingleton<RedisCacheService>();
+builder.Services.AddSingleton<CollectionService>();
 
 // Other Services
 builder.Services.AddControllersWithViews();
