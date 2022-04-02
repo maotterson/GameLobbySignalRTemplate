@@ -71,7 +71,12 @@ namespace GameLobbySignalRTemplate.Server.Services
                 await Redis.GetDatabase().ListLeftPushAsync(collection, item.SerializeJson());
             }
         }
-
+        public async Task CacheListItemAsync<T>(T item, string collectionReference)
+        {
+            var collection = _collectionService.CollectionsDictionary[collectionReference];
+            if (item is null) throw new();
+            await Redis.GetDatabase().ListLeftPushAsync(collection, item.SerializeJson());
+        }
         public async Task<bool?> IsAliasAvailable(Alias alias)
         {
             var collection = _collectionService.CollectionsDictionary["UsedAliases"];
@@ -82,7 +87,7 @@ namespace GameLobbySignalRTemplate.Server.Services
 
             foreach (var item in json)
             {
-                var taken = item.DeserializeJson<Alias>();
+                var taken = item.DeserializeJson<AliasEntity>();
                 if (alias.Value == taken.Value) return false;
             }
 

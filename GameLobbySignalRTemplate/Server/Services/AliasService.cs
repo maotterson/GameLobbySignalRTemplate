@@ -2,6 +2,7 @@
 using GameLobbySignalRTemplate.Server.Models.Database;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using GameLobbySignalRTemplate.Shared.Models.Alias.Utils;
 
 namespace GameLobbySignalRTemplate.Server.Services
 {
@@ -36,7 +37,7 @@ namespace GameLobbySignalRTemplate.Server.Services
         {
             Alias alias = null!;
             bool? isAliasAvailable = false;
-            await CacheUsedAliasesAsync(); // not storing cache locally due to frequent changes
+            await PopulateUsedAliasesCacheAsync(); // cache not stored locally due to frequent changes
 
             while (isAliasAvailable is false)
             {
@@ -47,16 +48,14 @@ namespace GameLobbySignalRTemplate.Server.Services
 
                 isAliasAvailable = await _redisService.IsAliasAvailable(alias);
             }
+            var aliasEntity = alias.AsAliasEntity();
 
-            NotifyAliasUsed(alias);
+            await _mongoDBService.AddUsedAlias(aliasEntity);
+            await _redisService.CacheListItemAsync(aliasEntity, "UsedAliases");
             return alias;
         }
 
-        private async Task NotifyAliasUsed(Alias alias)
-        {
-            // todo 
-        }
-        private async Task CacheUsedAliasesAsync()
+        private async Task PopulateUsedAliasesCacheAsync()
         {
             var isCached = await _redisService.IsCachedList("TakenAliases");
             if (isCached) return;

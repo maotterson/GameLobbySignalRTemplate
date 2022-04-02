@@ -2,6 +2,7 @@
 using GameLobbySignalRTemplate.Server.Models.Database;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using GameLobbySignalRTemplate.Shared.Models.Alias.Utils;
 
 namespace GameLobbySignalRTemplate.Server.Services
 {
@@ -19,7 +20,12 @@ namespace GameLobbySignalRTemplate.Server.Services
             MongoDatabase = mongoClient.GetDatabase(gameDBSettings.Value.DatabaseName);
             _collectionService = collectionService;
         }
-
+        public async Task AddUsedAlias(AliasEntity aliasEntity)
+        {
+            var collectionName = _collectionService.CollectionsDictionary["UsedAliases"];
+            var aliasCollection = MongoDatabase.GetCollection<AliasEntity>(collectionName);
+            await aliasCollection.InsertOneAsync(aliasEntity);
+        }
         public async Task<IList<Suffix>> GetSuffixesAsync()
         {
             var collectionName = _collectionService.CollectionsDictionary["Suffix"];
