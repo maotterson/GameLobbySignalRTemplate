@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace GameLobbySignalRTemplate.Shared.Models.Alias.Utils
 {
-    public static class AliasDtoHelpers
+    public static class AliasEntityHelpers
     {
-        public static AliasDto AsDto(this Alias alias)
+        public static AliasEntity AsAliasEntity(this Alias alias)
         {
-            AliasDto aliasDto = new()
+            AliasEntity aliasEntity = new()
             {
                 Value = alias.Value
             };
 
-            return aliasDto;
+            return aliasEntity;
         }
     }
 }

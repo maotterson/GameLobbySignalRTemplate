@@ -8,6 +8,7 @@ namespace GameLobbySignalRTemplate.Shared.Models.Alias
 {
     public record AliasDto
     {
-        public string Name { get; set; }
+        public string Value { get; set; }
     }
+
 }

@@ -22,16 +22,24 @@ namespace GameLobbySignalRTemplate.Server.Services
 
         public async Task<IList<Suffix>> GetSuffixesAsync()
         {
-            var collection = _collectionService.CollectionsDictionary["Suffix"];
-            var suffixCollection = MongoDatabase.GetCollection<Suffix>(collection);
+            var collectionName = _collectionService.CollectionsDictionary["Suffix"];
+            var suffixCollection = MongoDatabase.GetCollection<Suffix>(collectionName);
             return await suffixCollection.Find(_ => true).ToListAsync();
         }
 
         public async Task<IList<Prefix>> GetPrefixesAsync()
         {
-            var collection = _collectionService.CollectionsDictionary["Prefix"];
-            var prefixCollection = MongoDatabase.GetCollection<Prefix>(collection);
+            var collectionName = _collectionService.CollectionsDictionary["Prefix"];
+            var prefixCollection = MongoDatabase.GetCollection<Prefix>(collectionName);
             return await prefixCollection.Find(_ => true).ToListAsync();
+        }
+
+        public async Task<IList<AliasEntity>> GetUsedAliasesAsync()
+        {
+
+            var collectionName = _collectionService.CollectionsDictionary["UsedAliases"];
+            var usedAliasCollection = MongoDatabase.GetCollection<AliasEntity>(collectionName);
+            return await usedAliasCollection.Find(_ => true).ToListAsync();
         }
     }
 }
