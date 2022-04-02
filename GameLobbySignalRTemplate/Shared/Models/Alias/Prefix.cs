@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-namespace GameLobbySignalRTemplate.Server.Models
+namespace GameLobbySignalRTemplate.Shared.Models.Alias
 {
-    public class Suffix
+    public class Prefix
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

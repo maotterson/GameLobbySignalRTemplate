@@ -1,4 +1,4 @@
-﻿using GameLobbySignalRTemplate.Server.Models;
+﻿using GameLobbySignalRTemplate.Shared.Models.Alias;
 using GameLobbySignalRTemplate.Server.Models.Database;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;

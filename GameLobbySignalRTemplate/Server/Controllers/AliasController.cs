@@ -1,4 +1,6 @@
 ﻿using GameLobbySignalRTemplate.Server.Services;
+using GameLobbySignalRTemplate.Shared.Models.Alias;
+using GameLobbySignalRTemplate.Shared.Models.Alias.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -12,7 +14,7 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         private readonly AliasService _aliasService;
 
         public AliasController(
-            ILogger<AliasController> logger, 
+            ILogger<AliasController> logger,
             AliasService aliasService)
         {
             _logger = logger;
@@ -20,12 +22,11 @@ namespace GameLobbySignalRTemplate.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<string> GetAsync()
+        public async Task<ActionResult<AliasDto>> GetAsync()
         {
             var alias = await _aliasService.GetRandomAliasAsync();
-
-            _logger.LogInformation(alias);
-            return JsonSerializer.Serialize(alias);
+            var aliasDto = alias.AsDto();
+            return Ok(aliasDto);
         }
     }
 }

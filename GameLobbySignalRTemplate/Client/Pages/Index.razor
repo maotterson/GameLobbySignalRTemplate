@@ -1,17 +1,18 @@
 ﻿@page "/"
 @using System.Text.Json
+@using GameLobbySignalRTemplate.Shared.Models.Alias
 @inject HttpClient HttpClient
 
 <PageTitle>Index</PageTitle>
 
 @if(Alias is not null)
 {
-    <span>@Alias</span>
+    <span>@Alias.Name</span>
 }
 <button @onclick="FetchAlias">New Name</button>
 
 @code{
-    public string? Alias {get; private set;}
+    public AliasDto? Alias {get; private set;}
     protected override async Task OnInitializedAsync()
     {
         await FetchAlias();
@@ -22,8 +23,7 @@
         var response = await HttpClient.SendAsync(request);
         if (response.IsSuccessStatusCode)
         {
-            using var responseStream = await response.Content.ReadAsStreamAsync();
-            Alias = await JsonSerializer.DeserializeAsync<string>(responseStream);
+            Alias = await response.Content.ReadFromJsonAsync<AliasDto>();
             StateHasChanged();
         }
     }

@@ -1,17 +1,14 @@
-﻿using GameLobbySignalRTemplate.Server.Models;
+﻿using GameLobbySignalRTemplate.Shared.Models.Alias;
 using GameLobbySignalRTemplate.Server.Models.Database;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using StackExchange.Redis;
-using GameLobbySignalRTemplate.Server.Utils;
-using GameLobbySignalRTemplate.Server.Models.Redis;
 
 namespace GameLobbySignalRTemplate.Server.Services
 {
     public class AliasService
     {
-        private IList<Prefix> prefixes;
-        private IList<Suffix> suffixes;
+        private IList<Prefix> prefixes = null!;
+        private IList<Suffix> suffixes = null!;
         private CollectionService _collectionService;
         private RedisCacheService _redisService;
         private MongoDBService _mongoDBService;
@@ -26,18 +23,19 @@ namespace GameLobbySignalRTemplate.Server.Services
             _mongoDBService = mongoDBService;
             _collectionService = collectionService;
         }
-        public async Task<string> GetRandomAliasAsync()
+        public async Task<Alias> GetRandomAliasAsync()
         {
-            if (prefixes is null) prefixes = await GetPrefixesAsync();
-            if (suffixes is null) suffixes = await GetSuffixesAsync();
+            if (prefixes is null) prefixes = await PopulatePrefixesAsync();
+            if (suffixes is null) suffixes = await PopulateSuffixesAsync();
 
             Random random = new Random();
             Prefix prefix = prefixes.ToList()[random.Next(prefixes.ToList().Count)];
             Suffix suffix = suffixes.ToList()[random.Next(suffixes.ToList().Count)];
+            Alias alias = new(prefix, suffix);
 
-            return $"{prefix.Name}{suffix.Name}";
+            return alias;
         }
-        private async Task<IList<Prefix>> GetPrefixesAsync()
+        private async Task<IList<Prefix>> PopulatePrefixesAsync()
         {
             var prefixes = await _redisService.GetPrefixesAsync()!;
             if (prefixes is null)
@@ -49,7 +47,7 @@ namespace GameLobbySignalRTemplate.Server.Services
             return prefixes;
         }
         
-        private async Task<IList<Suffix>> GetSuffixesAsync()
+        private async Task<IList<Suffix>> PopulateSuffixesAsync()
         {
             var suffixes = await _redisService.GetSuffixesAsync()!;
             if (suffixes is null)
@@ -57,9 +55,8 @@ namespace GameLobbySignalRTemplate.Server.Services
                 suffixes = await _mongoDBService.GetSuffixesAsync();
                 await _redisService.CacheListAsync(suffixes);
             }
+
             return suffixes;
         }
-
-        
     }
 }

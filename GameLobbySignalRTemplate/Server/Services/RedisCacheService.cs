@@ -1,4 +1,4 @@
-﻿using GameLobbySignalRTemplate.Server.Models;
+﻿using GameLobbySignalRTemplate.Shared.Models.Alias;
 using GameLobbySignalRTemplate.Server.Models.Redis;
 using GameLobbySignalRTemplate.Server.Utils;
 using Microsoft.Extensions.Options;
@@ -58,7 +58,8 @@ namespace GameLobbySignalRTemplate.Server.Services
             var collection = _collectionService.CollectionsDictionary[property];
             foreach (var item in list)
             {
-                Redis.GetDatabase().ListLeftPush(collection, item.SerializeJson());
+                if (item is null) throw new();
+                await Redis.GetDatabase().ListLeftPushAsync(collection, item.SerializeJson());
             }
         }
 
