@@ -57,11 +57,11 @@ namespace GameLobbySignalRTemplate.Server.Services
 
         private async Task PopulateUsedAliasesCacheAsync()
         {
-            var isCached = await _redisService.IsCachedList("TakenAliases");
+            var isCached = await _redisService.IsCachedList("UsedAliases");
             if (isCached) return;
 
             var takenAliases = await _mongoDBService.GetUsedAliasesAsync();
-            await _redisService.CacheListAsync(takenAliases, "TakenAliases");
+            await _redisService.CacheListAsync(takenAliases, "UsedAliases");
         }
         private async Task<IList<Prefix>> PopulatePrefixesAsync()
         {
